@@ -4,6 +4,9 @@ import React, {useState} from 'react';
 import './App.css';
 import { button, Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import shoesName from './data.js';
+import Detail from './component/Detail';
+
+import { Link, Route, Switch } from 'react-router-dom';
 
 
 function App() {
@@ -17,14 +20,15 @@ function App() {
   //아래부터 출력값 입력
   return (
     <div className="App">
+      {/*상단네비바*/}
       <Navbar bg="light" expand="lg">
         <Container>
           <Navbar.Brand href="#home">WOOJIN SHOP</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
+              <Nav.Link><Link to="/">Home</Link></Nav.Link>
+              <Nav.Link><Link to="/detail">Detail</Link></Nav.Link>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
@@ -36,22 +40,37 @@ function App() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-
-      <div className='jumbotron'>
-        <div>
-          <h1>98% Season Off</h1>
-          <h4>{shoes[1].title}</h4>
-          <hr />
-          <p>
-          This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
-          </p>
-          <p class="lead">
-            <a class="btn btn-light btn-lg" href="#" role="button">Learn more</a>
-          </p>
+    
+    <Switch>
+      {/*메인 페이지*/}
+      <Route exact path="/"> 
+        <div className='jumbotron'>
+          <div>
+            <h1>98% Season Off</h1>
+            <h4>{shoes[1].title}</h4>
+            <hr />
+            <p>
+            This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
+            </p>
+            <p class="lead">
+              <a class="btn btn-light btn-lg" href="#" role="button">Learn more</a>
+            </p>
+          </div>
         </div>
-      </div>
-      <ItemList shoes={shoes} />
+        <ItemList shoes={shoes} />
+      </Route>
 
+      {/*디테일 페이지*/}
+      <Route path="/detail">
+        <Detail />
+      </Route>
+
+      <Route path="/:id">
+        <h1>잘못된 접근입니다.....</h1>
+      </Route>
+
+    </Switch>
+      
     </div>
   );
 }
@@ -67,10 +86,10 @@ function ItemList(props){
     <>
     <div className='container'>
       <div className='row'>
-        {shoesName.map((shoess,i)=>{
+        {props.shoes.map((shoess,i)=>{
           return(
             <>
-              <div className='col-md-4'>
+              <div className='col-md-4' key={i}>
               <img src={`https://codingapple1.github.io/shop/shoes${i+1}.jpg`} width="100%" />
               <h4>{props.shoes[i].title}</h4>
               <p>{props.shoes[i].content} & {props.shoes[i].price}</p>
@@ -83,8 +102,6 @@ function ItemList(props){
     </>
   )
 }
-
-
 
 
 export default App;
