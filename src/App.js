@@ -5,6 +5,7 @@ import './App.css';
 import { button, Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import shoesName from './data.js';
 import Detail from './component/Detail';
+import axios from 'axios'; //ajax요청을 위한 라이브러리 import
 
 import { Link, Route, Switch } from 'react-router-dom';
 
@@ -13,6 +14,7 @@ function App() {
 
   // State사용하는 구간
   let [shoes, shoesChange] = useState(shoesName); // 신발 정보를 가지고 있는 객체
+  let [stock, stockChange] = useState([10,11,12]); // 물건 재고 정보를 가지고 있는 객체 
 
 
 
@@ -57,11 +59,22 @@ function App() {
           </div>
         </div>
         <ItemList shoes={shoes} />
+        <button className='btn btn-primary' onClick={()=>{ // get요청으로 서버에서 데이터를 가져온다.  
+          axios.get('https://codingapple1.github.io/shop/data2.json') //성공은 then, 실패는 catch, then에 result(네이밍)값을 넣어 data를 가져올 수 있다.
+          .then((result)=>{ 
+            shoesChange([...shoes,...result.data])
+          })
+          .catch(()=>{
+            console.log("데이터 가져오는것을 실패했습니다.")
+          })
+
+          }}>더보기
+        </button>
       </Route>
 
       {/*디테일 페이지*/}
       <Route path="/detail/:id">
-        <Detail shoes={shoes}/>
+        <Detail shoes={shoes} stock={stock} stockChange={stockChange}/>
       </Route>
 
       <Route path="/:id">
