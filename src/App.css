@@ -15,3 +15,8 @@
   width: 95%;
   margin: auto;
 }
+
+.nav_deco {
+  text-decoration: none !important;
+  color: rgba(0, 0, 0, 0.55);
+}
