@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
 import { useHistory, useParams } from 'react-router-dom';
+import { button, Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import './Detail.scss';
-
+import {CSSTransition} from "react-transition-group";
+import { connect } from "react-redux";
 
 
 //Detail 컴포넌트 생성
@@ -10,6 +12,8 @@ function Detail(props){
     // state 생성하는 곳
     let [show, showChange] = useState(true);
     let [inputData, inputDataChange] = useState('');
+    let [tabnumber, tabChange] = useState(0);
+    let [cssswitch, cssswitchChange] = useState(false);
 
     //리액트 훅 생성하는 곳
     useEffect(()=>{
@@ -29,22 +33,45 @@ function Detail(props){
     return(
       <div className="container">
         {show===true? <div className="my-alert2">재고가 얼마 남지 않았습니다.</div>:null}
-            <div className="row">
-              <div className="col-md-6">
-                <img src={`https://codingapple1.github.io/shop/shoes${Number(id) + 1}.jpg`} width="100%" />
-              </div>
-              <div className="col-md-6 mt-4">
-                <h4 className="pt-5">{find_item.title}</h4>
-                <p>{find_item.content}</p>
-                <p>{find_item.price} ₩</p>
-                <Stock stock={props.stock} /> {/*App.js에서 props로 Detail.js에게 보낸 stock을 다시 Stock컴포넌트로 전송하는 방법 */}
-                <button className="btn btn-danger" onClick={()=>{props.stockChange([1,1,1])}}>주문하기</button> 
-                <button className="btn btn-danger" onClick={()=>{ 
-                    history.goBack();
-                 }}>뒤로가기</button>
-              </div>
+        <div className="row">
+          <div className="col-md-6">
+            <img src={`https://codingapple1.github.io/shop/shoes${Number(id) + 1}.jpg`} width="100%" />
           </div>
-        </div> 
+          <div className="col-md-6 mt-4">
+            <h4 className="pt-5">{find_item.title}</h4>
+            <p>{find_item.content}</p>
+            <p>{find_item.price} ₩</p>
+            <Stock stock={props.stock} /> {/*App.js에서 props로 Detail.js에게 보낸 stock을 다시 Stock컴포넌트로 전송하는 방법 */}
+            <button className="btn btn-danger" onClick={()=>{
+                props.stockChange([1,1,1]); 
+                props.dispatch({ type : 'add_item_to_cart', payload : {id: props.shoes[2].id , name: props.shoes[2].title, quan: 1} })
+                console.log(props.shoes);
+                history.push('/cart')
+              }}>장바구니 담기</button> 
+            <button className="btn btn-danger" onClick={()=>{ 
+                history.goBack();
+              }}>뒤로가기</button>
+          </div>
+        </div>
+
+        <Nav className='mt-5' variant="tabs" defaultActiveKey="link-0">
+          <Nav.Item>
+            <Nav.Link className="nav_deco" eventKey="link-0" onClick={()=>{ cssswitchChange(false); tabChange(0) }}>상품정보</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link className="nav_deco" eventKey="link-1" onClick={()=>{ cssswitchChange(false); tabChange(1) }}>배송정보</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link className="nav_deco" eventKey="link-2" onClick={()=>{ cssswitchChange(false); tabChange(2) }}>판매자정보</Nav.Link>
+          </Nav.Item>
+        </Nav>
+
+        <CSSTransition in={cssswitch} classNames="wow" timeout={500}>
+          <TapContent tabnumber={tabnumber} cssswitchChange={cssswitchChange}/> 
+        </CSSTransition>
+        
+
+      </div>
     )
   }
 
@@ -57,9 +84,35 @@ function Detail(props){
   }
 
 
+  function TapContent(props){
+
+    useEffect(()=>{
+      props.cssswitchChange(true);
+    })
+
+    if(props.tabnumber === 0){
+      return(<div>0번내용</div>)
+    }
+    else if(props.tabnumber === 1){
+      return(<div>1번내용</div>)
+    }
+    else{
+      return(<div>2번내용</div>)
+    }
+  }
 
 
 
 
-  //외부로 익스폴트 실시!
-  export default Detail;
+
+
+  function 함수명(state){
+    return{
+        state : state.reducer, // state라는 이름의 props로 바꿔주셈
+        alert_is_open : state.reducer2
+    }
+}
+// 위 함수는 store안에 있는 내용들을 다 가져와서 props처럼 만들어주는 함수
+
+export default connect(함수명)(Detail) 
+

@@ -4,7 +4,8 @@ import React, {useState, useContext} from 'react';
 import './App.css';
 import { button, Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import shoesName from './data.js';
-import Detail from './component/Detail'; 
+import Detail from './component/Detail';
+import Cart from './component/Cart' 
 import axios from 'axios'; //ajax요청을 위한 라이브러리 import
 
 import { Link, Route, Switch } from 'react-router-dom';
@@ -33,7 +34,7 @@ function App() {
               <Nav.Link><Link to="/" className='nav_deco'>Home</Link></Nav.Link>
               <Nav.Link ><Link to="/detail/2" className='nav_deco'>Detail</Link></Nav.Link>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+                <NavDropdown.Item><Link to="/cart" className='nav_deco2'>Cart</Link></NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
                 <NavDropdown.Divider />
@@ -80,6 +81,12 @@ function App() {
         <Detail shoes={shoes} stock={stock} stockChange={stockChange}/>
       </Route>
 
+      {/*장바구니 페이지*/}
+      <Route path="/cart">
+        <Cart />
+      </Route>
+
+      {/*잘못된 접근 페이지*/} 
       <Route path="/:id">
         <h1>잘못된 접근입니다.....</h1>
       </Route>
@@ -121,6 +128,6 @@ function ItemList(props){
     </>
   )
 }
-
+ 
 
 export default App;

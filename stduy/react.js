@@ -8,7 +8,7 @@
 
 // 1. useState : 변수를 저장하고 변수를 변화시키는 함수를 가진 객체 => 리액트에서 State수정이 생기면 State가 포함된 HTML을 재 랜더링 한다.
 
-import {useState} from 'react'; // 함수 사용을 위한 선언
+import {useEffect, useState} from 'react'; // 함수 사용을 위한 선언
 let [data,dataChange] = useState('default'); // data에 변수를 넣고 dataChange함수를 이용해서 data의 값을 변경 시킬 수 있다.
 dataChange('changedValue');
 
@@ -333,3 +333,202 @@ axios.get('URL')
 
 axios.post('서버URL',{id:'bwj0509', pw:1234});
 //axios.post() 사용 기본형
+
+
+
+
+
+
+
+
+
+
+// 14. 하위 컴포넌트로 State값을 전송하는 방법
+// 1 props를 사용 -> 부모의 자식까지는 괜찮은데 그 자식의 자식 컴포넌트가 있는 경우 코드가 많이 복잡해진다.
+// 2 context를 사용 할 수 있다. -> 컴포넌트의 구성이 복잡할 때 사용하면 좋다.
+
+let stock_context = React.createContext();
+// context를 만들어서 변수에 저장한다.
+
+<stock_context.Provider value = {data}>
+ <html>
+     <Detail />
+     <h1>내용...</h1>
+ </html>
+</stock_context.Provider>
+
+// context를 사용하고 하는 범위를 다음과 같이 지정해서 사용한다. 사용하고자 하는 변수를 value값안에 집어넣어 준다.
+// 공유 된 곳에 가서 ex) Detail안에서 data.변수 이런식으로 사용이 가능하다.
+//
+
+
+
+
+
+
+
+
+
+
+
+
+// 15.Tap 생성하는법
+
+function App(){
+    let [showswitch, showswitchChange] = useState(0);
+    return(
+        <>
+            <button onClick={()=>{showswitchChange(0)}}>0번버튼</button>
+            <button onClick={()=>{showswitchChange(1)}}>1번버튼</button>
+            <button onClick={()=>{showswitchChange(2)}}>2번버튼</button>
+
+            <Switch_control showswitch={showswitch}/>
+        </>
+            )
+}
+
+function Switch_control(props){
+    if(props.showswitch === 0){
+        return(<div>0번 버튼을 클릭했을 때 보여줄 내용</div>)
+    }
+    else if(props.showswitch === 1){
+        return(<div>1번 버튼을 클릭했을 때 보여줄 내용</div>)
+    }
+    else{
+        return(<div>2번 버튼을 클릭했을 때 보여줄 내용</div>)
+    }
+}
+// 버튼 3개를 생성하고, 그 버튼에 따라 보여질 div박스 3개를 생성한다. state로 상태를 관리해서 버튼에 맞는 div를 보여 줄 수 있도록 한다.
+
+
+
+
+
+
+
+
+
+
+
+
+// 16. Tap을 만든 후에 리액트에서의 애니메이션 사용하는 법
+
+// 15번 버튼제어하는 기본형에서 시작한다. -> css를 직접 제어해서 하는 방법이 있지만 리액트 라이브러리로 쉽게 처리가 가능하다.
+// 라이브러리 설치하기 npm install react-transition-group
+import {CSSTransition} from "react-transition-group"; // 임포트를 진행하고
+// <CSSTransition>으로 필요한 곳을 감싸고 in, classNames, timeout을 속성으로 넣어준다.
+// in은 스위치로 true일때 애니메이션을 적용하고, classNames는 어떤 애니메이션인지 작명하는 부분, tiemout은 작동시간이다.
+// wow에 대한 스타일을 담당하는 CSS로 가서 애니메이션을 디자인 하면 된다.
+// css설명: .wow-enter{} 는 컴포넌트 등장시작시 적용할 CSS, .wow-enter-active{}는 컴포넌트 등장중일시 적용할 CSS이다.
+// 평소에는 in 안에 있는 값을 false로 해뒀다가 작동시킬때 true로 바꾸면된다 -> state를 이용해서 변수 관리
+// 버튼을 클릭할때는 트랜지션컨트롤이 false가 되고 스위치컨트롤 컴포넌트를 실행 할때 useEffect에 의해 트랜지션컨트롤이 true가 되면서 에니매이션이 작동한다.
+
+function App(){
+    let [showswitch, showswitchChange] = useState(0);
+    let [transition_control, transition_controlChange] =  useState(false)
+    return(
+        <>
+            <button onClick={()=>{transition_controlChange(false); showswitchChange(0)}}>0번버튼</button>
+            <button onClick={()=>{transition_controlChange(false); showswitchChange(1)}}>1번버튼</button>
+            <button onClick={()=>{transition_controlChange(false); showswitchChange(2)}}>2번버튼</button>
+
+            <CSSTransition in={transition_control} classNames="wow" timeout={500}> 
+                <Switch_control showswitch={showswitch} transition_controlChange={transition_controlChange}/>
+            </CSSTransition>
+            
+        </>
+            )
+}
+
+function Switch_control(props){
+
+    useEffect(()=>{
+        props.transition_controlChange(true);
+    })
+
+    if(props.showswitch === 0){
+        return(<div>0번 버튼을 클릭했을 때 보여줄 내용</div>)
+    }
+    else if(props.showswitch === 1){
+        return(<div>1번 버튼을 클릭했을 때 보여줄 내용</div>)
+    }
+    else{
+        return(<div>2번 버튼을 클릭했을 때 보여줄 내용</div>)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// 17. redux 사용하기
+// 사용이유는 깊은 하위 컴포넌트들도 State를 쉽게 사용할 수 있다. 그리고 state 데이터도 관리가 가능하다.
+
+// index.js 에서 시작
+import {Provider} from 'react-redux' // 리액트 리덕스 사용 세팅 -> 같은 State를 사용하고  HTML 구역을 <Provider>로 묶에 준다.
+import { createStore } from 'redux'; // createStore를 이용해서 state관리를 쉽게 할 수 있다.
+
+let item = [
+    { id:0, name:'나이키신발', quan : 2 }, 
+    { id:1, name:'아디다스신발', quan : 21 }, 
+    { id:2, name:'디올신발', quan : 112 }
+    ]
+  
+  function reducer(state = item, action){
+    if( action.type === 'add_quan'){
+      let copy_item = [...item];
+      copy_item[0].quan++;
+      return copy_item;
+    }
+    else if( action.type === 'minus_quan' && item[0].quan>0 ){
+      let copy_item = [...item];
+      copy_item[0].quan--;
+      return copy_item;
+    }
+    else{
+      return state
+    }
+  }
+  
+  let store = createStore(reducer); //1. state초깃값을 넣어서 생성해줄 수 있다. 그런다음 props처럼 Provider에게 전송해준다.
+                                    //1. createStore 함수값으로 들어가던 내용을 리듀서로 옮겼다.
+                                    // state보관통인 store 생성 완료!
+
+//index.js에서는 세팅 끝
+
+//사용하고자 하는 곳으로 이동. Cart.js로 이동
+
+import { connect } from "react-redux"; // 리덕스 사용을 위해 connect를 import 진행한다.
+
+// 기존에 작성된 Cart 컴포넌트 아래에 함수를 추가해서 connect를 진행한다.
+
+function 함수명(state){
+    return{
+        state : state // state라는 이름의 props로 바꿔주셈
+    }
+}
+// 위 함수는 store안에 있는 내용들을 다 가져와서 props처럼 만들어주는 함수
+
+export default connect(함수명)(Cart)
+// 이 함수랑 Cart라는 컴포넌트랑 연결시켜 주세요 라는 의미이다.
+
+
+// 이제 Cart컴포넌트에서 props를 이용해서 state값에 접근이 가능하다. 
+
+{<button onClick={()=>{ props.dispatch({ type : 'add_quan' }) }}>+</button>}
+{<button onClick={()=>{ props.dispatch({ type : 'minus_quan' }) }}>-</button>}
+
+// 버튼에 dispatch라는 함수를 이용해 type 값을 넣어 원하는 액션을 실행 시킬 수 있다.
+
+// 리덕스는 조그만 사이트에서는 복잡해 보일 수 있으나 대규모(어마한 컴포넌트를 다루는 프로젝트)프로젝트에서는 컴포넌트를 쉽게 다루는 큰 장점이 있다.
+
+//state가 하나 더 필요하다면 초기값 + reducer를 만들면 된다!
+
+// redux store에 온갖 데이터 저장은 ㄴㄴ, cart에 alert창같은 단독으로 실행되는 것들은 cart안에서 useState로 상태 관리 하자!
