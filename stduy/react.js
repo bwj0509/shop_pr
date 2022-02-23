@@ -198,6 +198,7 @@ history.goBack();
 
 // 9. styled-Components 이용
 import styled from 'styled-components';
+import axios from 'axios';
 
 let Box = styled.div`
     padding : 20px;
@@ -261,5 +262,74 @@ let Box = styled.div`
 
 
 
+// 11.useEffect 훅 : 컴포넌트가 마운트, 업데이트 되었을때 특정 코드를 실행 시키는 훅
+
+useEffect(()=>{
+    return(()=>{
+        <h1>실행 할 코드</h1>
+    })
+})
+//기본형 작성 방법
 
 
+useEffect(()=>{
+    let timer = setTimeout(()=>{ showChange(false) },3000); //setTimeout()의 첫번째 매개변수에 실행할 코드 넣고, 두번째 매개변수에 몇초 뒤에 실행 할지 넣음
+    return ()=>{clearTimeout(timer)} // 2초안에 페이지를 이탈 할 경우 위에 코드에 문제가 생길 수 있어서 clearTimeout을 통해서 타이머를 해제 해 준다.
+  });
+// 사용예시
+
+
+useEffect(()=>{
+    return(()=>{
+        <h1>실행 할 코드</h1>
+    })
+},[data])
+
+//,[data]를 넣는 경우에는 data라는 state가 업데이트 될 때에만 useEffect가 실행 된다.
+// 여러개 집어넣는 것도 가능하고 []이런식으로 조건을 아무것도 적지 않으면 처음에 마운트 될 때에만 useEffect가 작동한다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+//12. UI를 특정 조건에 보여지게 하는 법
+
+ let [show, showChange] = useState(false);
+ // 초기에 useState를 사용해서 변수를 생성해준다.
+
+ show === true? <Detail /> : null;
+ // 삼항연산자를 이용해서 State 변수값이 true 일때만 보여준다.
+
+
+
+
+
+
+
+
+
+//13. Ajax: 서버에 새로고침없이 요청을 할 수 있게 도와줌
+// 요청의 종류는 GET요청:특정페이지/자료읽기 , POST요청:서버로 중요 정보를 전달
+// 사용법 -> npm install axios
+import axios from 'axios';
+
+axios.get('URL')
+.then((res)=>{
+    console.log('get요청을 성공 했을 때 실행');
+    console.log(res.result);
+})
+.catch(()=>{
+    console.log('get요청을 실패 했을 때 실행')
+})
+//axios.get() 사용 기본형
+
+axios.post('서버URL',{id:'bwj0509', pw:1234});
+//axios.post() 사용 기본형
