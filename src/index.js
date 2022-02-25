@@ -8,27 +8,37 @@ import  { BrowserRouter } from 'react-router-dom'; // 리액트 라우터 세팅
 
 import {Provider} from 'react-redux' // 리액트 리덕스 사용 세팅 -> 같은 State를 사용하고 싶은 곳을 아래에서 <Provider>로 묶에 준다.
 import { combineReducers, createStore } from 'redux'; // createStore를 이용해서 state관리를 쉽게 할 수 있다.
-
+//state.findIndex((a)=>{return a.id === action.payload.id})
 let item = [
-  { id:0, name:'나이키신발', quan : 2 }, 
-  { id:1, name:'아디다스신발', quan : 21 }, 
-  { id:2, name:'디올신발', quan : 112 }
+  { id:0, name:'White and Black', quan : 2 }, 
+  { id:1, name:'Red Knit', quan : 21 }, 
+  { id:2, name:'Grey Yordan', quan : 112 }
   ]
 
 function reducer(state = item, action){
   if( action.type === 'add_item_to_cart'){
-    let copy_item = [...item];
-    copy_item.push(action.payload);
-    return copy_item;
+    let imi = state.findIndex((a)=>{return a.id === action.payload.id });
+
+    if(imi>=0){
+      let copy_item = [...item];
+      copy_item[action.payload.id].quan++;
+      return copy_item;
+    }
+    else{
+      let copy_item = [...item];
+      copy_item.push(action.payload);
+      return copy_item;
+    }
+    
   }
   if( action.type === 'add_quan'){
     let copy_item = [...item];
-    copy_item[0].quan++;
+    copy_item[action.data].quan++;
     return copy_item;
   }
-  else if( action.type === 'minus_quan' && item[0].quan>0 ){
+  else if( action.type === 'minus_quan' && item[action.data].quan>0 ){
     let copy_item = [...item];
-    copy_item[0].quan--;
+    copy_item[action.data].quan--;
     return copy_item;
   }
   else{

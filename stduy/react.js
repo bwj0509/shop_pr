@@ -468,7 +468,7 @@ function Switch_control(props){
 
 
 
-// 17. redux 사용하기
+// 17. redux 사용하기 기본편
 // 사용이유는 깊은 하위 컴포넌트들도 State를 쉽게 사용할 수 있다. 그리고 state 데이터도 관리가 가능하다.
 
 // index.js 에서 시작
@@ -532,3 +532,68 @@ export default connect(함수명)(Cart)
 //state가 하나 더 필요하다면 초기값 + reducer를 만들면 된다!
 
 // redux store에 온갖 데이터 저장은 ㄴㄴ, cart에 alert창같은 단독으로 실행되는 것들은 cart안에서 useState로 상태 관리 하자!
+
+
+
+
+
+
+
+// 18. redux사용하기 reducer, dispatch에 대해서
+//만약 reducer를 사용하다가 하나 더 필요한 경우가 생길 수 있다. 이러한 경우에는 자료 기본형과, 함수를 선언하고
+
+let store = createStore(combineReducers({ reducer, reducer2 }));
+
+// 다음과 같이 createStore에서 combineReducers 함수를 이용해 필요한 함수들을 넣어주면 여러개 사용이 가능하다.
+
+function 함수명(state){
+    return{
+        state : state.reducer, // state라는 이름의 props로 바꿔주셈
+        alert_is_open : state.reducer2
+    }
+}
+// 위 함수는 store안에 있는 내용들을 다 가져와서 props처럼 만들어주는 함수
+
+export default connect(함수명)(Cart) 
+
+//그리고 사용하고자 하는 컴포넌트로 가서 2개의 reducer를 어떻게 사용할지 이름을 변경해주면 되고 props를 이용해서 사용하면 된다.
+
+
+{<button className="btn btn-danger" onClick={()=>{
+                props.stockChange([1,1,1]); 
+                props.dispatch({ type : 'add_item_to_cart', payload : {id: props.shoes[2].id , name: props.shoes[2].title, quan: 1} })
+                console.log(props.shoes);
+                history.push('/cart')
+              }}>장바구니 담기</button>}
+
+// 버튼을 만들어서 장바구니에 상품을 담는 코드임.
+// 버튼에 onClick을해서 props.dispatch를 실시합니다. 액션 type을 지정하고 payload로 아이템 정보를 전달합니다. 그리고 history훅을 사용해 /cert페이지로 이동함
+
+
+
+
+
+
+
+
+
+
+
+
+// 19. redux를 사용할때 함수도 선언하고, dispatch경로도 설정하고 되게 복잡하다... 신문법을 이용하자 -> useSelector훅, useDispatch훅!
+
+import {useSelector, useDispatch} from 'react-redux';
+
+let state = useSelector((state)=>state) // useSelector사용 기본형이다. 변수를 선언하고 useSelector 함수에 redux안에 있는 모든 state를 리턴 해주세요.
+
+// 이제 사용자는 props 문법을 사용하지 않고 state.reducer, state.reducer2 이런식으로 사용이 가능하다!
+
+let dispatch = useDispatch(); // useDispatch사용 기본형이다. 이제 props로 사용 할 필요없이 dispatch를 사용 할 수 있다.
+
+{<>
+    <button onClick={()=>{ dispatch({ type : 'add_quan' }) }}>+</button>
+    <button onClick={()=>{ dispatch({ type : 'minus_quan' }) }}>-</button>
+</>}
+//예를 들어서 디스패치에 바로 type을 담아서 사용 할 수 있다는 것!    
+
+

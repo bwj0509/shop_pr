@@ -9,6 +9,7 @@ import Cart from './component/Cart'
 import axios from 'axios'; //ajax요청을 위한 라이브러리 import
 
 import { Link, Route, Switch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 let stock_context = React.createContext(); // Stock_context라는 context를 생성하였고 범위를 지정하여 변수를 사용 할 수 있게 해준다. props친구임
 
@@ -100,13 +101,13 @@ function App() {
 
 
 //컴포넌트 제작 구간 
-
+// 
 
 //컴포넌트-1 : 상품을 보여주는 컴포넌트
 function ItemList(props){
 
   let stock = useContext(stock_context); // useContext를 이용해서 공유된 값 사용 매개변수에는 지정해둔 범위를 넣는다.
-
+  let history = useHistory();
   return(
     <>
     <div className='container'>
@@ -114,12 +115,12 @@ function ItemList(props){
         {props.shoes.map((shoess,i)=>{
           return(
             <>
-              <div className='col-md-4' key={i}>
-              <img src={`https://codingapple1.github.io/shop/shoes${i+1}.jpg`} width="100%" />
-              <h4>{props.shoes[i].title}</h4>
-              <p>{props.shoes[i].content} & {props.shoes[i].price}</p>
-              {stock[props.i]}
-        </div> 
+              <div className='col-md-4' key={i} onClick={()=>{history.push(`./detail/${shoess.id}`)}}>
+                  <img src={`https://codingapple1.github.io/shop/shoes${i+1}.jpg`} width="100%" />
+                  <h4>{props.shoes[i].title}</h4>
+                  <p>{props.shoes[i].content} & {props.shoes[i].price}</p>
+                  {stock[props.i]}
+              </div> 
             </>
           )
         })}

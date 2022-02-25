@@ -42,12 +42,12 @@ function Detail(props){
             <p>{find_item.content}</p>
             <p>{find_item.price} ₩</p>
             <Stock stock={props.stock} /> {/*App.js에서 props로 Detail.js에게 보낸 stock을 다시 Stock컴포넌트로 전송하는 방법 */}
-            <button className="btn btn-danger" onClick={()=>{
+            <button className="btn btn-danger m-1" onClick={()=>{
                 props.stockChange([1,1,1]); 
-                props.dispatch({ type : 'add_item_to_cart', payload : {id: props.shoes[2].id , name: props.shoes[2].title, quan: 1} })
-                console.log(props.shoes);
+                props.dispatch({ type : 'add_item_to_cart', payload : {id: props.shoes[find_item.id].id , name: props.shoes[find_item.id].title, quan: 1} })
                 history.push('/cart')
-              }}>장바구니 담기</button> 
+              }}>주문하기
+            </button>
             <button className="btn btn-danger" onClick={()=>{ 
                 history.goBack();
               }}>뒤로가기</button>
