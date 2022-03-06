@@ -1,9 +1,9 @@
 @import "../reset.scss";
 
-$메인칼라: #ff0000;
+$메인칼라_빨간색: #ff0000;
 
 .red {
-  color: $메인칼라;
+  color: $메인칼라_빨간색;
 }
 
 .nav_deco {
@@ -17,14 +17,14 @@ $메인칼라: #ff0000;
 }
 
 .my-alert {
+  p {
+    margin: auto;
+  }
   background-color: #eeeeee;
   border-radius: 5px;
   padding: 20px;
   max-width: 500px;
   width: 100%;
-  margin: auto;
-}
-.my-alert p {
   margin: auto;
 }
 

@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 import  { BrowserRouter } from 'react-router-dom'; // 리액트 라우터 세팅
 
-import {Provider} from 'react-redux' // 리액트 리덕스 사용 세팅 -> 같은 State를 사용하고 싶은 곳을 아래에서 <Provider>로 묶에 준다.
+import { Provider } from 'react-redux' // 리액트 리덕스 사용 세팅 -> 같은 State를 사용하고 싶은 곳을 아래에서 <Provider>로 묶에 준다.
 import { combineReducers, createStore } from 'redux'; // createStore를 이용해서 state관리를 쉽게 할 수 있다.
 //state.findIndex((a)=>{return a.id === action.payload.id})
 let item = [

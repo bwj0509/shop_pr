@@ -2,7 +2,7 @@
 // import 사용하는 구간
 import React, {useState, useContext} from 'react';
 import './App.css';
-import { button, Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import shoesName from './data.js';
 import Detail from './component/Detail';
 import Cart from './component/Cart' 
@@ -46,53 +46,56 @@ function App() {
         </Container>
       </Navbar>
     
-    <Switch>
-      {/*메인 페이지*/}
-      <Route exact path="/"> 
-        <div className='jumbotron'>
-          <div>
-            <h1>98% Season Off</h1>
-            <hr />
-            <p>
-            This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
-            </p>
-            <p class="lead">
-              <a class="btn btn-light btn-lg" href="#" role="button">Learn more</a>
-            </p>
+      <Switch>
+        {/*메인 페이지*/}
+        <Route exact path="/"> 
+          <div className='jumbotron'>
+            <div>
+              <h1>98% Season Off</h1>
+              <hr />
+              <p>
+              This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.
+              </p>
+              <p class="lead">
+                <a class="btn btn-light btn-lg" href="#" role="button">Learn more</a>
+              </p>
+            </div>
           </div>
-        </div>
-        <stock_context.Provider value={stock}> {/*context를 사용하였고 상품 설명 창에서 stock 변수를 사용하기 위해서 props대신에 사용하였다. 필요한 부분을 HTML로 싸매면 가능하다*/}
-          <ItemList shoes={shoes} />
-          <button className='btn btn-primary' onClick={()=>{ // get요청으로 서버에서 데이터를 가져온다.  
-            axios.get('https://codingapple1.github.io/shop/data2.json') //성공은 then, 실패는 catch, then에 result(네이밍)값을 넣어 data를 가져올 수 있다.
-            .then((result)=>{ 
-              shoesChange([...shoes,...result.data])
-            })
-            .catch(()=>{
-              console.log("데이터 가져오는것을 실패했습니다.")
-            })
+          <stock_context.Provider value={stock}> {/*context를 사용하였고 상품 설명 창에서 stock 변수를 사용하기 위해서 props대신에 사용하였다. 필요한 부분을 HTML로 싸매면 가능하다*/}
+            <ItemList shoes={shoes} />
+            <button className='btn btn-primary' onClick={()=>{ // get요청으로 서버에서 데이터를 가져온다.  
+              axios.get('https://codingapple1.github.io/shop/data2.json') //성공은 then, 실패는 catch, then에 result(네이밍)값을 넣어 data를 가져올 수 있다.
+              .then((result)=>{ 
+                shoesChange([...shoes,...result.data])
+              })
+              .catch(()=>{
+                console.log("데이터 가져오는것을 실패했습니다.")
+              })
+              .finally(()=>{
+                console.log('axios.get 작업이 완료되었습니다!')
+              })
 
-            }}>더보기
-          </button>
-        </stock_context.Provider>
-      </Route>
+              }}>더보기
+            </button>
+          </stock_context.Provider>
+        </Route>
 
-      {/*디테일 페이지*/}
-      <Route path="/detail/:id">
-        <Detail shoes={shoes} stock={stock} stockChange={stockChange}/>
-      </Route>
+        {/*디테일 페이지*/}
+        <Route path="/detail/:id">
+          <Detail shoes={shoes} stock={stock} stockChange={stockChange}/>
+        </Route>
 
-      {/*장바구니 페이지*/}
-      <Route path="/cart">
-        <Cart />
-      </Route>
+        {/*장바구니 페이지*/}
+        <Route path="/cart">
+          <Cart />
+        </Route>
 
-      {/*잘못된 접근 페이지*/} 
-      <Route path="/:id">
-        <h1>잘못된 접근입니다.....</h1>
-      </Route>
+        {/*잘못된 접근 페이지*/} 
+        <Route path="/:id">
+          <h1>잘못된 접근입니다.....</h1>
+        </Route>
 
-    </Switch>
+      </Switch>
       
     </div>
   );
@@ -119,7 +122,6 @@ function ItemList(props){
                   <img src={`https://codingapple1.github.io/shop/shoes${i+1}.jpg`} width="100%" />
                   <h4>{props.shoes[i].title}</h4>
                   <p>{props.shoes[i].content} & {props.shoes[i].price}</p>
-                  {stock[props.i]}
               </div> 
             </>
           )
@@ -129,6 +131,4 @@ function ItemList(props){
     </>
   )
 }
- 
-
 export default App;

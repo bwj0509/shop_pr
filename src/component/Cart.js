@@ -21,7 +21,7 @@ function Cart(props){
                     </tr>
                 </thead> 
                 <tbody>
-                    {
+                    {   
                         state.reducer.map((a,i)=>{
                             return(
                                 <tr key={i}>
@@ -38,6 +38,7 @@ function Cart(props){
                     }
                 </tbody>
             </Table>
+
             {state.reducer2 === true
             ? <div className="my-alert">
                 <p>지금 구매하시면 신규할인 20%</p>

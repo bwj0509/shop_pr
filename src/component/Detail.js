@@ -1,17 +1,16 @@
 import React, {useEffect, useState} from "react";
 import { useHistory, useParams } from 'react-router-dom';
-import { button, Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
+import { Nav } from 'react-bootstrap';
 import './Detail.scss';
-import {CSSTransition} from "react-transition-group";
-import { connect } from "react-redux";
+import { CSSTransition } from "react-transition-group";
+import { connect, useDispatch } from "react-redux";
 
 
 //Detail 컴포넌트 생성
-function Detail(props){
+function Detail(props){ // props정보 app.js에서 shoes={shoes} stock={stock} stockChange={stockChange}
 
     // state 생성하는 곳
     let [show, showChange] = useState(true);
-    let [inputData, inputDataChange] = useState('');
     let [tabnumber, tabChange] = useState(0);
     let [cssswitch, cssswitchChange] = useState(false);
 
@@ -22,20 +21,21 @@ function Detail(props){
     });
 
     let history = useHistory();
-    let {id} = useParams();
+    let {id} = useParams(); // :id값을 가져와서 id라는 변수에 저장!
+    let dispatch = useDispatch();
 
-    let find_item = props.shoes.find(function(item){
+    let find_item = props.shoes.find((item)=>{
       return item.id == id
-    })
+    }) // find_item이라는 변수는 props.shoes에서 find를 해서 id라는 값과 일치하는 item.id를 가져온다.
 
 
     //출력되는 값
     return(
       <div className="container">
-        {show===true? <div className="my-alert2">재고가 얼마 남지 않았습니다.</div>:null}
+        {show===true? <div className="my-alert2">재고가 얼마 남지 않았습니다.</div> : null}
         <div className="row">
           <div className="col-md-6">
-            <img src={`https://codingapple1.github.io/shop/shoes${Number(id) + 1}.jpg`} width="100%" />
+            <img src={`https://codingapple1.github.io/shop/shoes${Number(find_item.id) + 1}.jpg`} width="100%" />
           </div>
           <div className="col-md-6 mt-4">
             <h4 className="pt-5">{find_item.title}</h4>
@@ -44,7 +44,7 @@ function Detail(props){
             <Stock stock={props.stock} /> {/*App.js에서 props로 Detail.js에게 보낸 stock을 다시 Stock컴포넌트로 전송하는 방법 */}
             <button className="btn btn-danger m-1" onClick={()=>{
                 props.stockChange([1,1,1]); 
-                props.dispatch({ type : 'add_item_to_cart', payload : {id: props.shoes[find_item.id].id , name: props.shoes[find_item.id].title, quan: 1} })
+                dispatch({ type : 'add_item_to_cart', payload : {id: props.shoes[find_item.id].id , name: props.shoes[find_item.id].title, quan: 1} })
                 history.push('/cart')
               }}>주문하기
             </button>
@@ -100,8 +100,6 @@ function Detail(props){
       return(<div>2번내용</div>)
     }
   }
-
-
 
 
 
